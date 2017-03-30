@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RadioButton 
+		style="@style/main_footbar_radio_center"
+		android:text="@string/createRoom"
+		android:onClick="createRoom"
+		android:textSize="20sp"/>
+
+</LinearLayout>

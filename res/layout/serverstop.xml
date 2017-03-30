@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RadioButton 
+	android:onClick="localGame"
+	style="@style/main_footbar_radio"
+	android:drawableLeft="@drawable/local_game"/>
+
+
+    <RadioButton 
+	style="@style/main_footbar_radio_center"
+	 android:text="@string/serverlist"
+	android:textSize="20sp"/>
+       
+       
+    <RadioButton 
+	android:id="@+id/rexult_refresh"
+	android:onClick="refreshServer"
+	style="@style/main_footbar_radio"
+	android:drawableRight="@drawable/wighet_refresh"/>
+
+</LinearLayout>

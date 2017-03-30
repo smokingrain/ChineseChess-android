@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+	android:background="@drawable/listview_background"    
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dip" >
+
+        <ImageView
+            android:id="@+id/creator_head"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/head1"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:id="@+id/l2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/ctime"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="6dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:padding="2dip"
+                android:singleLine="true"
+                android:textColor="@color/gray"
+                android:textSize="15sp"
+                android:text="2015-05-20 10:22:21" />
+			<TextView
+                android:id="@+id/cstatus"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="2dip"
+                android:singleLine="true"
+                android:textColor="@color/gray"
+                android:textSize="14sp" 
+                android:text="正在游戏"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/l2"
+            android:layout_toRightOf="@id/creator_head"
+            android:orientation="vertical"
+            android:paddingLeft="8dip" >
+
+            <TextView
+                android:id="@+id/cname"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="2dip"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="15sp" 
+                android:ellipsize="end"
+                android:text="dagek的房间"/>
+
+            <TextView
+                android:id="@+id/creator"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="2dip"
+                android:singleLine="true"
+                android:textColor="@color/gray"
+                android:textSize="14sp" 
+                android:text="创建者：dagekui"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

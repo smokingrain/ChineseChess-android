@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/exit_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+    <LinearLayout 
+        android:gravity="center"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:background="@drawable/maskbg"
+	    android:orientation="vertical" >
+    	<com.xk.chinesechess.ui.GifView
+	        android:id="@+id/gifview"
+	        android:layout_width="124dp"
+	        android:layout_height="124dp"
+	        android:layout_weight="4"
+	        android:layout_gravity="center"
+	        android:layout_marginTop="40dp"
+	        android:layout_marginLeft="35dp"/>
+	
+    	<LinearLayout 
+    	    android:id="@+id/maskcontent"
+    	    android:layout_width="280dp"
+    	    android:layout_height="80dp"
+	        android:layout_weight="1"
+	        android:layout_marginTop="1dp"
+	        android:gravity="center_horizontal"
+	        android:orientation="vertical"
+	        android:padding="10dp">
+	        
+    	    <TextView
+    	        android:layout_width="fill_parent"
+    	        android:layout_height="fill_parent"
+    	        android:gravity="center_horizontal"
+		        android:id="@+id/mask_info"
+		        android:ellipsize="end"
+	        	android:maxLines="6"
+		        android:textColor="#333"
+		        android:textSize="16sp" />
+    	</LinearLayout>
+	
+    </LinearLayout>
+
+    
+
+</LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RadioButton 
+	android:id="@+id/result_return"
+	android:onClick="goBack"
+	style="@style/main_footbar_radio"
+	android:drawableLeft="@drawable/wighet_left_btn"/>
+
+
+    <RadioButton 
+	style="@style/main_footbar_radio_center"
+	android:text="@string/roomlist"
+	android:textSize="20sp"/>
+       
+       
+    <RadioButton 
+	android:id="@+id/rexult_refresh"
+	android:onClick="refreshRooms"
+	style="@style/main_footbar_radio"
+	android:drawableRight="@drawable/wighet_refresh"/>
+
+</LinearLayout>
