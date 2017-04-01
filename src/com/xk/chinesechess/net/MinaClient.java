@@ -116,7 +116,7 @@ public class MinaClient {
 	
 	public void close(boolean notify){
 		if(null!=listener&&notify){
-			PackageInfo info=new PackageInfo(MyApplication.me.getCid(), "disconnect", Constant.SERVER, Constant.MSG_DISCONNECT, Constant.APP);
+			PackageInfo info=new PackageInfo(MyApplication.me.getCid(), "disconnect", "server", Constant.MSG_DISCONNECT, Constant.APP, 0);
 			listener.getMessage(info);
 			System.out.println("send close msg!");
 		}
@@ -143,8 +143,14 @@ public class MinaClient {
 		public void messageReceived(IoSession session, Object message)
 				throws Exception {
 			PackageInfo info=JSONUtil.toBean(message.toString(),PackageInfo.class);
-			if("LOGIN".equals(info.getType())){
-				cListener.connected(Long.parseLong(info.getMsg()));
+			if("auth".equals(info.getType())){
+				String msg = info.getMsg();
+				if("true".equals(msg)) {
+					cListener.connected(info.getFrom());
+				}else {
+					cListener.connected(null);
+				}
+				
 				return;
 			}
 			listener.getMessage(info);

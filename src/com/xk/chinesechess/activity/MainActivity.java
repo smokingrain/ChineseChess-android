@@ -1,5 +1,7 @@
 package com.xk.chinesechess.activity;
 
+import java.util.Map;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,27 +28,30 @@ public class MainActivity extends AndroidApplication {
 	private AndroidSender sender;
 	private XMask xMask;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Intent intent=getIntent();
-        boolean isMyPlace=intent.getBooleanExtra("isMyPlace", true);
-        boolean isLocal=intent.getBooleanExtra("isLocal", true);
-        String roomid=intent.getStringExtra("roomid");
-        String enamyStr=intent.getStringExtra("enamy");
-        handler=new ADHandler(this);
-        AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        cfg.useGL20 = true;
-        sender=new AndroidSender(handler);
-        sender.setContext(this);
-        ChineseChess gobang=ChineseChess.getInstance(sender);
-        gobang.isLocal=isLocal;
-        gobang.isMyPlace=isMyPlace;
-        gobang.roomid=roomid;
-        Constant.me=MyApplication.me;
-        Constant.enamy=JSONUtil.toBean(enamyStr, Client.class);
-        gobang.setListener(MyApplication.ml);
-        initialize(gobang, cfg);
-    }
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Intent intent = getIntent();
+		boolean isMyPlace = intent.getBooleanExtra("isMyPlace", true);
+		boolean isLocal = intent.getBooleanExtra("isLocal", true);
+		String roomid = intent.getStringExtra("roomid");
+		String enamyStr = intent.getStringExtra("enamy");
+		handler = new ADHandler(this);
+		AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
+		cfg.useGL20 = true;
+		sender = new AndroidSender(handler);
+		sender.setContext(this);
+		ChineseChess cc = ChineseChess.getInstance(sender);
+		cc.isLocal = isLocal;
+		cc.isMyPlace = isMyPlace;
+		cc.roomid = roomid;
+		Constant.me = MyApplication.me;
+		Map<String, Object> enm = JSONUtil.fromJson(enamyStr);
+		Constant.enamy = new Client();
+		Constant.enamy.setCname((String)enm.get("name"));
+		Constant.enamy.setCid((String)enm.get("id"));
+		cc.setListener(MyApplication.ml);
+		initialize(cc, cfg);
+	}
     
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

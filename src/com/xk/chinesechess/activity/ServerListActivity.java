@@ -17,6 +17,7 @@ import com.xk.chinesechess.activity.adapter.ServerListAdapter;
 import com.xk.chinesechess.activity.adapter.ViewTag;
 import com.xk.chinesechess.constant.MyApplication;
 import com.xk.chinesechess.message.Client;
+import com.xk.chinesechess.message.PackageInfo;
 import com.xk.chinesechess.net.ConnectionListener;
 import com.xk.chinesechess.net.DownloadFile;
 import com.xk.chinesechess.net.Loginer;
@@ -25,6 +26,7 @@ import com.xk.chinesechess.net.TestHostCallBack;
 import com.xk.chinesechess.ui.XDialog;
 import com.xk.chinesechess.ui.XMask;
 import com.xk.chinesechess.utils.Constant;
+import com.xk.chinesechess.utils.JSONUtil;
 import com.xk.server.utils.StringUtil;
 
 import a.b.c.DynamicSdkManager;
@@ -298,12 +300,12 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 		
 	}
 	
-	public void connectServer(Long id){
+	public void connectServer(String id){
 		if(null!=xmask){
 			xmask.dismiss();
 			xmask=null;
 		}
-		if(null==id||id<0){
+		if(null==id){
 			Toast.makeText(this, "服务器连接失败，请刷新重试", Toast.LENGTH_SHORT).show();
 		}else{
 			MyApplication.me.setCid(id);
@@ -344,7 +346,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 				MyApplication.nc.setcListener(new ConnectionListener() {
 					
 					@Override
-					public void connected(Long uid) {
+					public void connected(String uid) {
 						if(null!=uid){
 							MyApplication.serverip=tag.sip;
 						}
@@ -355,6 +357,10 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 					}
 				});
 				MyApplication.nc.init(tag.sip, 5492);
+				Map<String, Object> minfo = new HashMap<String, Object>();
+				minfo.put("name", MyApplication.me.getCname());
+				PackageInfo info = new PackageInfo("server", JSONUtil.toJosn(minfo), "-1", "auth", Constant.APP, 0);
+				MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
 				
 			}
 		}).start();
@@ -476,8 +482,8 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 				}
 				break;
 			case Constant.CONNECT_SERVER:
-				Long id=(Long) msg.obj;
-				activity.connectServer(id);
+				String uid=(String) msg.obj;
+				activity.connectServer(uid);
 				break;
 			case Constant.SHOULD_UPDATE:
 				activity.handleUpdate();

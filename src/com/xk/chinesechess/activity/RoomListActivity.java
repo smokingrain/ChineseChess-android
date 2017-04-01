@@ -1,7 +1,9 @@
 package com.xk.chinesechess.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.xk.chinesechess.R;
@@ -97,10 +99,14 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 				if(name.length()>10){
 					return;
 				}
-				Rooms room=new Rooms();
-				room.setCreater(MyApplication.me);
-				room.setName(name);
-				PackageInfo info=new PackageInfo(-1L, JSONUtil.toJosn(room), MyApplication.me.getCid(), Constant.MSG_CROOM,Constant.APP);
+//				Rooms room=new Rooms();
+//				room.setCreater(MyApplication.me);
+//				room.setName(name);
+				
+				Map<String, Object> room = new HashMap<String, Object>();
+				room.put("name", name);
+				room.put("type", 1);
+				PackageInfo info = new PackageInfo("server", JSONUtil.toJosn(room), MyApplication.me.getCid(), Constant.MSG_CROOM,Constant.APP, 0);
 				System.out.println("CROOM:"+JSONUtil.toJosn(info));
 				MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
 				dialog.dismiss();
@@ -118,10 +124,11 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 	public void refreshRooms(View view){
 		PackageInfo info=new PackageInfo();
 		info.setApp(Constant.APP);
-		info.setTo(-1L);
+		info.setTo("");
 		info.setFrom(MyApplication.me.getCid());
 		info.setMsg("");
 		info.setType(Constant.MSG_ROOMS);
+		info.setVersion(0);
 		MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
 	}
 
@@ -145,7 +152,7 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 		PackageInfo info=new PackageInfo();
 		info.setApp(Constant.APP);
 		info.setFrom(MyApplication.me.getCid());
-		info.setTo(Constant.SERVER);
+		info.setTo("server");
 		info.setType(Constant.MSG_JOIN);
 		MyApplication.me.setRoomid(tag.sip);
 		info.setMsg(JSONUtil.toJosn(MyApplication.me));
@@ -169,24 +176,29 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 			List<Rooms> rooms = JSONUtil.toBean(msg, type);
 			initRooms(rooms);
 		}else if(Constant.MSG_CROOM.equals(pack.getType())){
+			String msg = pack.getMsg();
+			if(null == msg) {
+				Toast.makeText(getApplicationContext(), "创建房间失败", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			Intent intent=new Intent(this,MainActivity.class);
 			intent.putExtra("isMyPlace", true);
 			intent.putExtra("isLocal", false);
-			intent.putExtra("roomid", pack.getMsg());
-			MyApplication.me.setRoomid(pack.getMsg());
+			intent.putExtra("roomid", msg);
+			MyApplication.me.setRoomid(msg);
 			startActivity(intent);
-		}else if(Constant.MSG_JOIN_RESULT.equals(pack.getType())){
+		}else if(Constant.MSG_JOIN.equals(pack.getType())){
 			xmask.dismiss();
-			if("fail".equals(pack.getMsg())){
+			if(null == pack.getMsg()){
 				Toast.makeText(getApplicationContext(), "加入房间失败", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			Rooms room=JSONUtil.toBean(pack.getMsg(), Rooms.class);
+			Map<String, Object> room = JSONUtil.fromJson(pack.getMsg());
 			Intent intent=new Intent(this,MainActivity.class);
 			intent.putExtra("isMyPlace", false);
 			intent.putExtra("isLocal", false);
-			intent.putExtra("roomid", room.getId());
-			intent.putExtra("enamy", JSONUtil.toJosn(room.getCreater()));
+			intent.putExtra("roomid", (String)room.get("id"));
+			intent.putExtra("enamy", JSONUtil.toJosn(room.get("creator")));
 			startActivity(intent);
 		}else if(Constant.MSG_DISCONNECT.equals(pack.getType())){
 			Toast.makeText(getApplicationContext(), "服务器连接中断", Toast.LENGTH_SHORT).show();
