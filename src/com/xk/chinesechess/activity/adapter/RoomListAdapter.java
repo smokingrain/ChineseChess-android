@@ -50,8 +50,8 @@ public class RoomListAdapter extends BaseAdapter {
 		TextView cstatus=(TextView) view.findViewById(R.id.cstatus);
 		TextView ctime=(TextView) view.findViewById(R.id.ctime);
 		name.setText(room.getName());
-		creator.setText(room.getCreater().getCname());
-		cstatus.setText(null==room.getClient()?"等待中":"正在游戏");
+		creator.setText(room.getCreator());
+		cstatus.setText((null==room.getMembers() || room.getMembers().isEmpty())?"等待中":"正在游戏");
 		ctime.setText(room.getCreateTime());
 		ViewTag tag=new ViewTag();
 		tag.sid=position+1;

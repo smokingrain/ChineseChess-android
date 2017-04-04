@@ -65,7 +65,7 @@ public class ServerListAdapter extends BaseAdapter {
 	public void reset(List<Map<String,String>> data){
 		Map<String,String> temp=new HashMap<String,String>();
 		temp.put("name", "公共服务器");
-		temp.put("ip", "120.25.90.35");
+		temp.put("ip", "192.168.1.102");
 		data.add(temp);
 		list=data;
 	}

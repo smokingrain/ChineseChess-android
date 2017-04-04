@@ -152,10 +152,10 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 		PackageInfo info=new PackageInfo();
 		info.setApp(Constant.APP);
 		info.setFrom(MyApplication.me.getCid());
-		info.setTo("server");
+		info.setTo(tag.sip);
 		info.setType(Constant.MSG_JOIN);
 		MyApplication.me.setRoomid(tag.sip);
-		info.setMsg(JSONUtil.toJosn(MyApplication.me));
+		info.setMsg("");
 		System.out.println(JSONUtil.toJosn(info));
 		MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
 	}
@@ -172,9 +172,20 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 	public void handleMessage(PackageInfo pack){
 		if(Constant.MSG_ROOMS.equals(pack.getType())){
 			String msg=pack.getMsg();
-			JavaType type=JSONUtil.getType(Rooms.class);
-			List<Rooms> rooms = JSONUtil.toBean(msg, type);
-			initRooms(rooms);
+			JavaType type = JSONUtil.getCollectionType(List.class, Map.class);
+			List<Map<String, Object>> rooms = JSONUtil.toBean(msg, type);
+			List<Rooms> rms = new ArrayList<Rooms>();
+			for(Map<String, Object> map : rooms) {
+				Rooms room = new Rooms();
+				room.setId((String) map.get("id"));
+				room.setName((String) map.get("name"));
+				room.setCreator((String) map.get("creator"));
+				room.setCreateTime((String) map.get("createTime"));
+				room.setMembers((List<String>) map.get("members"));
+				room.setType((Integer) map.get("type"));
+				rms.add(room);
+			}
+			initRooms(rms);
 		}else if(Constant.MSG_CROOM.equals(pack.getType())){
 			String msg = pack.getMsg();
 			if(null == msg) {
