@@ -122,13 +122,7 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 	}
 	
 	public void refreshRooms(View view){
-		PackageInfo info=new PackageInfo();
-		info.setApp(Constant.APP);
-		info.setTo("");
-		info.setFrom(MyApplication.me.getCid());
-		info.setMsg("");
-		info.setType(Constant.MSG_ROOMS);
-		info.setVersion(0);
+		PackageInfo info=new PackageInfo("server", "", MyApplication.me.getCid(), Constant.MSG_ROOMS, Constant.APP, 0);
 		MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
 	}
 
@@ -149,13 +143,7 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 		xmask=new XMask(this);
 		xmask.setMessage("连接服务器...");
 		final ViewTag tag=(ViewTag) view.getTag();
-		PackageInfo info=new PackageInfo();
-		info.setApp(Constant.APP);
-		info.setFrom(MyApplication.me.getCid());
-		info.setTo(tag.sip);
-		info.setType(Constant.MSG_JOIN);
-		MyApplication.me.setRoomid(tag.sip);
-		info.setMsg("");
+		PackageInfo info=new PackageInfo(tag.sip, "", MyApplication.me.getCid(), Constant.MSG_JOIN, Constant.APP, 0);
 		System.out.println(JSONUtil.toJosn(info));
 		MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
 	}
