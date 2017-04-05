@@ -49,6 +49,7 @@ public class MainActivity extends AndroidApplication {
 		Constant.enamy = new Client();
 		Constant.enamy.setCname((String)enm.get("name"));
 		Constant.enamy.setCid((String)enm.get("id"));
+		Constant.enamy.setRoomid((String) enm.get("roomid"));
 		cc.setListener(MyApplication.ml);
 		initialize(cc, cfg);
 	}

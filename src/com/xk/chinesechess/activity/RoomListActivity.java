@@ -199,6 +199,9 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 			MyApplication.me.setRoomid(msg);
 			startActivity(intent);
 		}else if(Constant.MSG_JOIN.equals(pack.getType())){
+			if(!MyApplication.me.getCid().equals(pack.getFrom())) {
+				return;	
+			}
 			xmask.dismiss();
 			if(null == pack.getMsg()){
 				Toast.makeText(getApplicationContext(), "加入房间失败", Toast.LENGTH_SHORT).show();

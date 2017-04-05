@@ -26,15 +26,18 @@ public class SplashSpotActivity extends Activity {
 		CommonManager.getInstance(this).setUserDataCollect(true);
 		DynamicSdkManager.getInstance(this).initNormalAd();
 		ConnectivityManager cwjManager=(ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE); 
-		if(null!=cwjManager&&null!=cwjManager.getActiveNetworkInfo()&&cwjManager.getActiveNetworkInfo().isAvailable()&&DynamicSdkManager.getInstance(this).isDexLoadCompleted()){
-			DynamicSdkManager.getInstance(this).showSplash(this, ServerListActivity.class);
-			XMask mask=new XMask(this);
-			mask.setMessage("开始检测版本！");
-		}else{
-			Intent intent=new Intent(this,ServerListActivity.class);
-			this.startActivity(intent);
-			finish();
-		}
+		Intent intent=new Intent(this,ServerListActivity.class);
+		this.startActivity(intent);
+		finish();
+//		if(null!=cwjManager&&null!=cwjManager.getActiveNetworkInfo()&&cwjManager.getActiveNetworkInfo().isAvailable()&&DynamicSdkManager.getInstance(this).isDexLoadCompleted()){
+//			DynamicSdkManager.getInstance(this).showSplash(this, ServerListActivity.class);
+//			XMask mask=new XMask(this);
+//			mask.setMessage("开始检测版本！");
+//		}else{
+//			Intent intent=new Intent(this,ServerListActivity.class);
+//			this.startActivity(intent);
+//			finish();
+//		}
 		
 	}
 

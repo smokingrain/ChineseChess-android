@@ -98,7 +98,7 @@ public class MinaClient {
 			@Override
 			public void run() {
 				MinaClient client=new MinaClient();
-				if(client.init(host, 5492)){
+				if(client.init(host, 5666)){
 					Map<String,String> temp=new HashMap<String, String>();
 					temp.put("name",host );
 					temp.put("ip", host);
@@ -146,7 +146,7 @@ public class MinaClient {
 			if("auth".equals(info.getType())){
 				String msg = info.getMsg();
 				if("true".equals(msg)) {
-					cListener.connected(info.getFrom());
+					cListener.connected(info.getTo());
 				}else {
 					cListener.connected(null);
 				}

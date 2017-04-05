@@ -356,7 +356,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 						handler.sendMessage(msg);
 					}
 				});
-				MyApplication.nc.init(tag.sip, 5492);
+				MyApplication.nc.init(tag.sip, 5666);
 				Map<String, Object> minfo = new HashMap<String, Object>();
 				minfo.put("name", MyApplication.me.getCname());
 				PackageInfo info = new PackageInfo("server", JSONUtil.toJosn(minfo), "-1", "auth", Constant.APP, 0);
