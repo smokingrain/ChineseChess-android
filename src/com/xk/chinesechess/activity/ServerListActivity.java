@@ -17,6 +17,7 @@ import com.xk.chinesechess.activity.adapter.ServerListAdapter;
 import com.xk.chinesechess.activity.adapter.ViewTag;
 import com.xk.chinesechess.constant.MyApplication;
 import com.xk.chinesechess.message.Client;
+import com.xk.chinesechess.message.MessageCallBack;
 import com.xk.chinesechess.message.PackageInfo;
 import com.xk.chinesechess.net.ConnectionListener;
 import com.xk.chinesechess.net.DownloadFile;
@@ -55,15 +56,17 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-public class ServerListActivity extends Activity implements OnItemClickListener,TestHostCallBack{
+public class ServerListActivity extends Activity implements OnItemClickListener,TestHostCallBack,MessageCallBack{
 	public static final String SHARED_PREF_NAME="data.data";
-	private boolean searching=false;
+	private boolean searching = false;
+	private boolean connecting = false;
 	private RadioButton serviceBtn;
 	private ListView lview;
 	private ServerHandler handler;
 	private XMask xmask;
 	private XMask downloadMask;
 	private XDialog update;
+	private int model = 1;
 	private boolean oldVersion=true;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -241,15 +244,11 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 	 * @param view
 	 */
 	public void localGame(View view){
-		if(StringUtil.isBlank(MyApplication.me.getCname())){
-			createName(null);
-			return;
-		}
-		Intent intent=new Intent(this,MainActivity.class);
-		intent.putExtra("isMyPlace", true);
-		intent.putExtra("isLocal", true);
-		intent.putExtra("roomid", "");
-		startActivity(intent);
+		ViewTag tag = new ViewTag();
+		tag.sid = 1;
+		tag.sip = "10.60.15.162";
+		connectServer(tag, 2);
+		
 	}
 	/**
 	 * 刷新
@@ -309,8 +308,18 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 			Toast.makeText(this, "服务器连接失败，请刷新重试", Toast.LENGTH_SHORT).show();
 		}else{
 			MyApplication.me.setCid(id);
-			Intent intent= new Intent(this,RoomListActivity.class);
-			startActivity(intent);
+			
+			if(model == 1) {
+				Intent intent= new Intent(this,RoomListActivity.class);
+				startActivity(intent);
+			}else if(model == 2) {
+				Map<String, Object> room = new HashMap<String, Object>();
+				room.put("name", "localgame");
+				room.put("type", 2);
+				PackageInfo info = new PackageInfo("server", JSONUtil.toJosn(room), MyApplication.me.getCid(), Constant.MSG_CROOM,Constant.APP, 0);
+				System.out.println("CROOM:"+JSONUtil.toJosn(info));
+				MyApplication.nc.writeMessage(JSONUtil.toJosn(info));
+			}
 		}
 	}
 	
@@ -330,25 +339,32 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 //			});
 //			return;
 		}
+		ViewTag tag=(ViewTag) view.getTag();
+		connectServer(tag, 1);
+	}
+	
+	private void connectServer(final ViewTag tag, int model) {
 		if(StringUtil.isBlank(MyApplication.me.getCname())){
 			createName(null);
 			return;
 		}
-		xmask=new XMask(this);
+		this.model = model;
+		xmask = new XMask(this);
 		xmask.setMessage("连接服务器...");
-		final ViewTag tag=(ViewTag) view.getTag();
+		connecting = true;
+		handler.sendMessageDelayed(Message.obtain(handler, Constant.CONNECT_SERVER), 5 * 1000);
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
-				MyApplication.nc=MinaClient.getInstance();
+				MyApplication.nc = MinaClient.getInstance();
 				MyApplication.nc.setListener(MyApplication.ml);
 				MyApplication.nc.setcListener(new ConnectionListener() {
 					
 					@Override
 					public void connected(String uid) {
 						if(null!=uid){
-							MyApplication.serverip=tag.sip;
+							MyApplication.serverip = tag.sip;
 						}
 						Message msg=new Message();
 						msg.obj=uid;
@@ -364,7 +380,6 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 				
 			}
 		}).start();
-		
 	}
 	
 	public void createName(View view){
@@ -482,8 +497,11 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 				}
 				break;
 			case Constant.CONNECT_SERVER:
-				String uid=(String) msg.obj;
-				activity.connectServer(uid);
+				if(activity.connecting) {
+					activity.connecting = false;
+					String uid=(String) msg.obj;
+					activity.connectServer(uid);
+				}
 				break;
 			case Constant.SHOULD_UPDATE:
 				activity.handleUpdate();
@@ -504,10 +522,56 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 				Toast.makeText(activity, "下载失败", Toast.LENGTH_SHORT).show();
 				activity.closeDownload();
 				break;
+			case Constant.GET_MESSAGE:
+				PackageInfo pack=(PackageInfo) msg.obj;
+				System.out.println("GETMSG:"+JSONUtil.toJosn(pack));
+				activity.handleMessage(pack);
+				break;
 			default:break;
 			}
 		}
 		
+	}
+
+	
+	
+	
+	@Override
+	protected void onResume() {
+		MyApplication.ml.registListener(this);
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		MyApplication.ml.unregistListener(this);
+		super.onPause();
+	}
+
+	@Override
+	public boolean callBack(PackageInfo info) {
+		Message msg=new Message();
+		msg.what=Constant.GET_MESSAGE;
+		msg.obj=info;
+		handler.sendMessage(msg);
+		return false;
+		
+	}
+	
+	private void handleMessage(PackageInfo pack) {
+		if(Constant.MSG_CROOM.equals(pack.getType())){
+			String msg = pack.getMsg();
+			if(null == msg) {
+				Toast.makeText(getApplicationContext(), "创建房间失败", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			Intent intent=new Intent(this,MainActivity.class);
+			intent.putExtra("isMyPlace", true);
+			intent.putExtra("isLocal", true);
+			intent.putExtra("roomid", msg);
+			MyApplication.me.setRoomid(msg);
+			startActivity(intent);
+		}
 	}
 
 }

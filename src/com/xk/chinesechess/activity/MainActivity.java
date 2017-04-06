@@ -22,6 +22,7 @@ import com.xk.chinesechess.ui.XDialog;
 import com.xk.chinesechess.ui.XMask;
 import com.xk.chinesechess.utils.Constant;
 import com.xk.chinesechess.utils.JSONUtil;
+import com.xk.chinesechess.utils.StringUtil;
 
 public class MainActivity extends AndroidApplication {
 	private ADHandler handler;
@@ -45,11 +46,13 @@ public class MainActivity extends AndroidApplication {
 		cc.isMyPlace = isMyPlace;
 		cc.roomid = roomid;
 		Constant.me = MyApplication.me;
-		Map<String, Object> enm = JSONUtil.fromJson(enamyStr);
-		Constant.enamy = new Client();
-		Constant.enamy.setCname((String)enm.get("name"));
-		Constant.enamy.setCid((String)enm.get("id"));
-		Constant.enamy.setRoomid((String) enm.get("room"));
+		if(!StringUtil.isBlank(enamyStr)) {
+			Map<String, Object> enm = JSONUtil.fromJson(enamyStr);
+			Constant.enamy = new Client();
+			Constant.enamy.setCname((String)enm.get("name"));
+			Constant.enamy.setCid((String)enm.get("id"));
+			Constant.enamy.setRoomid((String) enm.get("room"));
+		}
 		cc.setListener(MyApplication.ml);
 		initialize(cc, cfg);
 	}
