@@ -98,7 +98,12 @@ public class AndroidSender implements MessageSender {
 	@Override
 	public void writeMessage(String info) {
 		MyApplication.nc.writeMessage(info);
-		
+	}
+	
+	@Override
+	public void close(){
+		MyApplication.nc.close(true);
+		MyApplication.serverip = null;
 	}
 
 	public static boolean isServiceWork(Context mContext, String serviceName) {  

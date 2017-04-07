@@ -181,7 +181,7 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 				return;
 			}
 			Intent intent=new Intent(this,MainActivity.class);
-			intent.putExtra("isMyPlace", true);
+			intent.putExtra("isMyPlace", 1);
 			intent.putExtra("isLocal", false);
 			intent.putExtra("roomid", msg);
 			MyApplication.me.setRoomid(msg);
@@ -197,7 +197,7 @@ public class RoomListActivity extends Activity implements OnItemClickListener,Me
 			}
 			Map<String, Object> room = JSONUtil.fromJson(pack.getMsg());
 			Intent intent=new Intent(this,MainActivity.class);
-			intent.putExtra("isMyPlace", false);
+			intent.putExtra("isMyPlace", 2);
 			intent.putExtra("isLocal", false);
 			intent.putExtra("roomid", (String)room.get("id"));
 			intent.putExtra("enamy", JSONUtil.toJosn(room.get("creator")));

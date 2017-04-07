@@ -246,7 +246,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 	public void localGame(View view){
 		ViewTag tag = new ViewTag();
 		tag.sid = 1;
-		tag.sip = "10.60.15.162";
+		tag.sip = "120.25.90.35";
 		connectServer(tag, 2);
 		
 	}
@@ -566,7 +566,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 				return;
 			}
 			Intent intent=new Intent(this,MainActivity.class);
-			intent.putExtra("isMyPlace", true);
+			intent.putExtra("isMyPlace", 1);
 			intent.putExtra("isLocal", true);
 			intent.putExtra("roomid", msg);
 			MyApplication.me.setRoomid(msg);

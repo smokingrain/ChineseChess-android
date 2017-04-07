@@ -32,7 +32,7 @@ public class MainActivity extends AndroidApplication {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
-		boolean isMyPlace = intent.getBooleanExtra("isMyPlace", true);
+		int isMyPlace = intent.getIntExtra("isMyPlace", 1);
 		boolean isLocal = intent.getBooleanExtra("isLocal", true);
 		String roomid = intent.getStringExtra("roomid");
 		String enamyStr = intent.getStringExtra("enamy");
