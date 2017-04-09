@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.xk.chinesechess.R;
+import com.xk.chinesechess.activity.ServerListActivity;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class ServerListAdapter extends BaseAdapter {
 	public void reset(List<Map<String,String>> data){
 		Map<String,String> temp=new HashMap<String,String>();
 		temp.put("name", "公共服务器");
-		temp.put("ip", "120.25.90.35");
+		temp.put("ip", ServerListActivity.REMOTE_HOST);
 		data.add(temp);
 		list=data;
 	}

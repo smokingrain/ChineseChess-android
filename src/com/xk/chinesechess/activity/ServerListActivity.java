@@ -58,6 +58,9 @@ import android.widget.Toast;
 
 public class ServerListActivity extends Activity implements OnItemClickListener,TestHostCallBack,MessageCallBack{
 	public static final String SHARED_PREF_NAME="data.data";
+	public static final String REMOTE_HOST = "192.168.1.100";
+	public static final Integer REMOTE_PORT = 5666;
+	
 	private boolean searching = false;
 	private boolean connecting = false;
 	private RadioButton serviceBtn;
@@ -68,6 +71,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 	private XDialog update;
 	private int model = 1;
 	private boolean oldVersion=true;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -246,7 +250,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 	public void localGame(View view){
 		ViewTag tag = new ViewTag();
 		tag.sid = 1;
-		tag.sip = "120.25.90.35";
+		tag.sip = REMOTE_HOST;
 		connectServer(tag, 2);
 		
 	}
@@ -372,7 +376,7 @@ public class ServerListActivity extends Activity implements OnItemClickListener,
 						handler.sendMessage(msg);
 					}
 				});
-				MyApplication.nc.init(tag.sip, 5666);
+				MyApplication.nc.init(tag.sip, REMOTE_PORT);
 				Map<String, Object> minfo = new HashMap<String, Object>();
 				minfo.put("name", MyApplication.me.getCname());
 				PackageInfo info = new PackageInfo("server", JSONUtil.toJosn(minfo), "-1", "auth", Constant.APP, 0);
